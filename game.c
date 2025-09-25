@@ -12,9 +12,10 @@
 #define LIN 25U
 
 int CheckInput(int table[][COL], int x, int y);
+int ContaVizinhos(int table[][COL],int y,int x);
 void MostrarTabuleiro(int table[][COL]);
 void GerarCampo(int table[][COL]);
-void GerarCampoRandom(int table[][COL]);
+void GerarCampoRandom(int table[][COL],int y,int x);
 void Menu(void);
 
 int CheckInput(int table[][COL], int x, int y);
@@ -92,8 +93,10 @@ int main()
         }
     }
 
-    if (task == 4)  //Staret game
+    if (task == 4)  //Start game
     {
+        //puts("Tarefa 4");
+
 
     }
 
@@ -162,7 +165,7 @@ void Menu(void)
     puts("0 - Sair");
 }
 
-void GerarCampoRandom(int table[][COL])
+void GerarCampoRandom(int table[][COL],int y,int x)
 {
     int i = 0, j = 0;
 
@@ -175,5 +178,51 @@ void GerarCampoRandom(int table[][COL])
             table[i][j] = (rand() % 100 < 35) ? 1 : 0;
         }
     }
+}
+
+int ContaVizinhos(int table[][COL],int y,int x)
+{
+    int vizinhos = 0;
+
+    if (x == 0)
+    {
+        //Verificar se esta nas extremidades
+        if (y == 0) //Canto superior esquerdo
+        {
+            vizinhos = table[y][x + 1] + table[y + 1][x + 1] + table[y + 1][x]; //Verifica a volta da celula
+            return vizinhos;
+        }
+        else if (y == LIN-1)    //Canto inferior esquerdo
+        {
+            vizinhos = table[y][x + 1] + table[y - 1][x + 1] + table[y - 1][x]; //Verifica a volta da celula
+            return vizinhos;
+        }
+        else    //Celulas do meio da primeira coluna
+        {
+            vizinhos = table[y - 1][x] + table[y + 1][x] + table[y][x + 1] + table[y - 1][x + 1] + table[y + 1][x + 1];
+        }
+    }
+    else if (x == COL-1)    //Ultima coluna
+    {
+        if (y == 0) //Canto superior direito
+        {
+            vizinhos = table[y][x - 1] + table[y + 1][x - 1] + table[y + 1][x]; //Verifica a volta da celula
+            return vizinhos;
+        }
+        else if (y == LIN-1)    //Cnato inferior direito
+        {
+            vizinhos = table[y][x - 1] + table[y - 1][x - 1] + table[y - 1][x]; //Verifica a volta da celula
+            return vizinhos;
+        }
+        else    //Celulas do meio da ultima coluna
+        {
+            vizinhos = table[y - 1][x] + table[y + 1][x] + table[y][x - 1] + table[y - 1][x - 1] + table[y + 1][x - 1];
+        }
+    }
+    else if (y == 0 && x > 0 && x < COL-1)  //Linha de cima sem contar com os cantos
+    {
+        vizinhos = table[y][x - 1] + table[y + 1][x - 1] + table[y + 1][x] + table[y][x + 1] + table[y + 1][x + 1];
+    }
+    return vizinhos;
 }
 
